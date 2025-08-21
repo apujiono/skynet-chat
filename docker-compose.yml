@@ -1,0 +1,14 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+      - "8765:8765"
+    environment:
+      - STRIPE_API_KEY=sk_test_...
+      - STRIPE_PUBLIC_KEY=pk_test_...
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
