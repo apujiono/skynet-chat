@@ -9,13 +9,13 @@ import websockets
 
 app = FastAPI(title="SkyNet Chat API 🌌🤖")
 
-# Mount frontend
-app.mount("/frontend", StaticFiles(directory="frontend/build"), name="frontend")
+# Mount frontend (untuk hosting lokal, di Replit gunakan repl terpisah)
+app.mount("/frontend", StaticFiles(directory="../frontend/build"), name="frontend")
 
-# CORS
+# CORS untuk Replit
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://skynet-chat-frontend.your-username.repl.co", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,8 +32,8 @@ app.include_router(polls.router)
 
 init_db()
 
-# WebSocket server
-clients = {}  # {channel: {username: websocket}}
+# WebSocket (dinonaktifkan di Replit free tier, gunakan polling)
+clients = {}
 
 async def broadcast(channel: str, message: str, username: str, private: bool = False, priority: bool = False):
     if channel in clients:
@@ -60,6 +60,7 @@ async def handle_connection(websocket: WebSocket, channel: str, username: str):
             del clients[channel]
         await broadcast(channel, f"{username} meninggalkan channel! 🏁", username)
 
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(websockets.serve(handle_connection, "0.0.0.0", 8765))
+# Nonaktifkan WebSocket di Replit free tier
+# @app.on_event("startup")
+# async def startup_event():
+#     asyncio.create_task(websockets.serve(handle_connection, "0.0.0.0", 8765))
