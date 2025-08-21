@@ -27,6 +27,15 @@ async def send_message(message: Message, username: str = Depends(get_current_use
     await broadcast(message.channel, f"{username}: {message.message}", username, message.private)
     return {"message": "Pesan terkirim! ✅"}
 
+@router.get("/messages")
+async def get_messages(channel: str, username: str = Depends(get_current_user)):
+    conn = sqlite3.connect('skynet_chat.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT username, message, private, priority FROM messages WHERE channel = ? ORDER BY timestamp DESC LIMIT 50", (channel,))
+    messages = [{"username": row[0], "message": row[1], "private": row[2], "priority": row[3]} for row in cursor.fetchall()]
+    conn.close()
+    return messages
+
 @router.post("/donation")
 async def process_donation(donation: Donation, username: str = Depends(get_current_user)):
     user_id = get_user_id(username)
