@@ -1,3 +1,4 @@
+
 {
   "name": "skynet-chat-frontend",
   "version": "1.0.0",
@@ -14,10 +15,10 @@
     "react-dropdown": "^1.11.0",
     "ipfs-http-client": "^60.0.0",
     "axios": "^1.6.7",
-    "tailwindcss": "^3.4.1",
-    "serve": "^14.2.0"
+    "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "serve": "^14.2.0"
   }
 }
