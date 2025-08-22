@@ -1,18 +1,18 @@
+import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import users, chat, streaming, profile, payment, analytics, polls
 from .database import init_db
 import asyncio
-import os
-import logging
-
-# Setup logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 app = FastAPI(title="SkyNet Chat API 🌌🤖")
 
-# CORS untuk Railway
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://<your-frontend-domain>.up.railway.app", "*"],
@@ -32,7 +32,7 @@ app.include_router(polls.router)
 
 init_db()
 
-# WebSocket
+# WebSocket (nonaktifkan sementara jika bermasalah)
 clients = {}
 
 async def broadcast(channel: str, message: str, username: str, private: bool = False, priority: bool = False):
@@ -66,9 +66,10 @@ async def handle_connection(websocket: WebSocket, channel: str, username: str):
 @app.on_event("startup")
 async def startup_event():
     logger.info(f"Starting server on port {os.environ.get('PORT', 'default')}")
-    # WebSocket server (opsional, aktifkan jika stabil)
+    # Nonaktifkan WebSocket server sementara
     # asyncio.create_task(websockets.serve(handle_connection, "0.0.0.0", 8765))
 
 if __name__ == "__main__":
     import uvicorn
+    logger.info("Starting uvicorn server...")
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
