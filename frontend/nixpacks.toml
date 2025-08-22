@@ -1,6 +1,5 @@
-providers = ['node']
 [phases.setup]
-nixPkgs = ['nodejs']
+nixPkgs = ['nodejs_18']
 cmds = ['npm install']
 
 [phases.build]
